@@ -17,7 +17,7 @@ For development, load master branch:
 
 ```Smalltalk
 Metacello new
-	repository: 'github://Ducasse/Myg';
+	repository: 'github://olivia-lang/Miner-Lang_Miroux_Nguyen';
 	baseline: 'Myg';
 	onConflictUseLoaded;
 	load.
