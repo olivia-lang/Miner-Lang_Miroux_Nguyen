@@ -18,7 +18,7 @@ Class {
 
 { #category : #'instance creation' }
 MBoard class >> createWithMatrix: aMatrix [
-
+	"create board with matrix given"
 	^ self new
 		  configureGrid: aMatrix;
 		  yourself
@@ -26,7 +26,7 @@ MBoard class >> createWithMatrix: aMatrix [
 
 { #category : #'test ressources' }
 MBoard class >> matrixForField [
-
+	"create matrix 5x5 with mines at some fixed positions"
 	^ self createWithMatrix: ((CTNewArray2D
 			    width: 5
 			    height: 5
@@ -44,7 +44,7 @@ MBoard class >> matrixForField [
 
 { #category : #'instance creation' }
 MBoard class >> matrixTest5x5 [
-
+	"create matrix 5x5 with MBOX random"
 	^ self createWithMatrix:
 		  (CTNewArray2D width: 5 height: 5 tabulate: [ :column :row |
 			   MBox randomCase ])
@@ -149,7 +149,7 @@ MBoard >> clickOnBox: aBox [
 
 { #category : #'box api' }
 MBoard >> flagCountAroundBox: aBox [
-
+	"count the number of flags around the box"
 	^ (self boxesAroundBox: aBox collect: [ :box |
 		   box isFlagged
 			   ifTrue: [ 1 ]
@@ -204,12 +204,13 @@ MBoard >> magnifier: aNumber [
 
 { #category : #'player api' }
 MBoard >> mineCount [
+	"total number of mines"
 	^ (self boxesSelect: #isMineBox) size
 ]
 
 { #category : #'box api' }
 MBoard >> mineCountAroundBox: aBox [
-
+	"count how many mines are around the box"
 	^ (self boxesAroundBox: aBox collect: [ :box |
 		   box isMineBox
 			   ifTrue: [ 1 ]
@@ -266,7 +267,7 @@ MBoard >> revealBoard [
 
 { #category : #accessing }
 MBoard >> rightFlagCountAroundBox: aBox [
-
+	"get the number of mines and the number of flags"
 	^ (self flagCountAroundBox: aBox)
 	  = (self mineCountAroundBox: aBox)
 ]
