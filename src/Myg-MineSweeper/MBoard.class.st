@@ -78,7 +78,7 @@ MBoard >> boxesAroundBox: aBox anySatisfy: aBlock [
 
 { #category : #enumerating2 }
 MBoard >> boxesAroundBox: aBox collect: aBlock [
-
+	"applies a block to each box and return a collection of boxes"
 	| collected |
 	collected := OrderedCollection new.
 	self
@@ -97,7 +97,7 @@ MBoard >> boxesAroundBox: aBox do: aBlock [
 
 { #category : #enumerating2 }
 MBoard >> boxesAroundBox: aBox doWithIndexes: aBlock [
-
+	"execute aBlock for each block around the block "
 	|x y|
 	x := aBox position x.
 	y := aBox position y.
@@ -123,6 +123,7 @@ MBoard >> boxesAroundBox: aBox select: aBlock [
 
 { #category : #enumerating }
 MBoard >> boxesDoWithIndices: aBlock [
+	"iterate the blocks (i,j) "
 	1 to: self height do: [ :i |
 		1 to: self width do: [ :j |
 			aBlock value: (self boxAt: i at: j) value: i value: j ] ]
@@ -130,7 +131,7 @@ MBoard >> boxesDoWithIndices: aBlock [
 
 { #category : #enumerating }
 MBoard >> boxesSelect: aBlock [
-	
+	"return a collection of the blocks "
 	| selected |
 	selected := OrderedCollection new.
 	grid do: [ :box | (aBlock value: box) ifTrue: [ selected add: box ] ].
