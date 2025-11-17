@@ -14,12 +14,13 @@ Class {
 
 { #category : #'subclass instance creation' }
 MBox class >> mine [
+	"create a box with a mine"
 	^ MMineBox new
 ]
 
 { #category : #'random subclass instance creation' }
 MBox class >> randomCase [
-
+	"probability to have a mine in the box is 2/8"
 	^ (1 to: 8) atRandom > 6
 		  ifTrue: [ self mine ]
 		  ifFalse: [ self safe ]
@@ -27,6 +28,7 @@ MBox class >> randomCase [
 
 { #category : #'subclass instance creation' }
 MBox class >> safe [
+	"create a safe box"
 	^ MSafeBox new
 ]
 
@@ -88,7 +90,7 @@ MBox >> isSafeBox [
 
 { #category : #clicking }
 MBox >> propagateClick [
-
+	"propagate if there is no mine around : open the safe box"
 	((self board hasMineBoxAroundBox: self) not or: [
 		 self board rightFlagCountAroundBox: self ]) ifTrue: [
 		self board
