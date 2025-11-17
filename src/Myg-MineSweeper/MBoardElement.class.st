@@ -34,6 +34,7 @@ Class {
 
 { #category : #'instance creation' }
 MBoardElement class >> launchLarge [
+	"launch with zoom x2"
 	^ self withMatrixTest5x5WithMagnifier: 2
 ]
 
@@ -44,16 +45,19 @@ MBoardElement class >> launchRegular [
 
 { #category : #'instance creation' }
 MBoardElement class >> launchSmall [
+	"launch with zoom at 0.5"
 	^ self withMatrixTest5x5WithMagnifier: 0.5
 ]
 
 { #category : #'instance creation' }
 MBoardElement class >> launchVeryLarge [
+	"launch with zoom at x4"
 	^ self withMatrixTest5x5WithMagnifier: 4
 ]
 
 { #category : #'instance creation' }
 MBoardElement class >> open [
+	"open and manage the menu to select the size, open the game"
 	<script>
 
 	| butSmall butRegular butLarge butVeryLarge space elt |
@@ -115,13 +119,13 @@ MBoardElement class >> open [
 
 { #category : #'instance creation' }
 MBoardElement class >> openWithModel: aModel [
-
+	"open a MBoard with zoom at x1"
 	^ self openWithModel: aModel withMagnifier: 1
 ]
 
 { #category : #'instance creation' }
 MBoardElement class >> openWithModel: aModel withMagnifier: aNumber [
-
+	"open a MBoard with a zoom given"
 	| aGameElement space |
 	space := BlSpace new.
 	"Create the game model and the Bloc element."
@@ -172,7 +176,8 @@ MBoardElement >> game [
 
 { #category : #accessing }
 MBoardElement >> game: aMBoard [
-
+	"store the model and adjust the padding according to the zoom
+	 show the UI"
 	game := aMBoard.
 	self padding: (BlInsets all: 5 * game magnifier).
 	self layout columnCount: game width.
