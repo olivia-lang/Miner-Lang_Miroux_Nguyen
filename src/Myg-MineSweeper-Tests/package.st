@@ -1,1 +1,1 @@
-Package { #name : #'Myg-MineSweeper-Tests' }
+Package { #name : 'Myg-MineSweeper-Tests' }

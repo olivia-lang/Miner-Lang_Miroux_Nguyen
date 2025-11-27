@@ -2,15 +2,16 @@
 This class contains tests
 "
 Class {
-	#name : #MBoardElementTest,
-	#superclass : #TestCase,
+	#name : 'MBoardElementTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'board'
 	],
-	#category : #'Myg-MineSweeper-Tests'
+	#category : 'Myg-MineSweeper-Tests',
+	#package : 'Myg-MineSweeper-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 MBoardElementTest >> setUp [
 
 	super setUp.
@@ -19,14 +20,14 @@ MBoardElementTest >> setUp [
 			          magnifier: 1)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MBoardElementTest >> testAllHiddenAtBeginning [
 
 	board childrenDo: [ :each |
 		self assert: each background paint color equals: Color lightGray ]
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testClickOnMine [
 
 	<skip>
@@ -39,7 +40,7 @@ MBoardElementTest >> testClickOnMine [
 		equals: (MBoxElement mine scaledToSize: box size)
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testClickOnUnknown [
 
 	| box |
@@ -51,7 +52,7 @@ MBoardElementTest >> testClickOnUnknown [
 	self assert: box children first text asString equals: '0' 
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testMouseClickOnMine [
 
 	<skip>
@@ -66,7 +67,7 @@ MBoardElementTest >> testMouseClickOnMine [
 		equals: (MBoxElement mine scaledToSize: box size)
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testMouseClickOnUnknown [
 
 	| box unk |
@@ -80,7 +81,7 @@ MBoardElementTest >> testMouseClickOnUnknown [
 	self assert: box children first text asString equals: '0'
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testMouseRightClick [
 
 	<skip>
@@ -96,7 +97,7 @@ MBoardElementTest >> testMouseRightClick [
 		equals: (MBoxElement flag scaledToSize: box size)
 ]
 
-{ #category : #'tests - ui' }
+{ #category : 'tests - ui' }
 MBoardElementTest >> testRightClick [
 	
 	<skip>

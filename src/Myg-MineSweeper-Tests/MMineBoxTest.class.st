@@ -2,12 +2,13 @@
 A MMineTest is a test class for testing the behavior of MMine
 "
 Class {
-	#name : #MMineBoxTest,
-	#superclass : #MAbstractTest,
-	#category : #'Myg-MineSweeper-Tests'
+	#name : 'MMineBoxTest',
+	#superclass : 'MAbstractTest',
+	#category : 'Myg-MineSweeper-Tests',
+	#package : 'Myg-MineSweeper-Tests'
 }
 
-{ #category : #'tests-clicking' }
+{ #category : 'tests-clicking' }
 MMineBoxTest >> testClickInAtAt [
 
 	self deny: field gameEnded.

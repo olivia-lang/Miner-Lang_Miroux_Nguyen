@@ -2,15 +2,16 @@
 This class contains tests
 "
 Class {
-	#name : #MAbstractTest,
-	#superclass : #TestCase,
+	#name : 'MAbstractTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'field'
 	],
-	#category : #'Myg-MineSweeper-Tests'
+	#category : 'Myg-MineSweeper-Tests',
+	#package : 'Myg-MineSweeper-Tests'
 }
 
-{ #category : #'test ressources' }
+{ #category : 'test ressources' }
 MAbstractTest >> matrixForField [
 
 	^ (CTNewArray2D
@@ -28,7 +29,7 @@ MAbstractTest >> matrixForField [
 			   yourself
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 MAbstractTest >> setUp [
 
 	field := MBoard createWithMatrix: self matrixForField
