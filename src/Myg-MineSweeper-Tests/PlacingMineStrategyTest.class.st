@@ -11,7 +11,7 @@ Class {
 { #category : 'running' }
 PlacingMineStrategyTest >> setUp [
 	
-	mBoard := MBoard createWithMatrix: (CTNewArray2D width: 5 height: 5)
+	mBoard := MBoard createWithMatrix: (CTNewArray2D width: 5 height: 5  tabulate: [ :column :row | MBox safe ])
 ]
 
 { #category : 'tests' }
@@ -23,7 +23,7 @@ PlacingMineStrategyTest >> testFixedPositionMinesAreCorrect [
 	
 	strategy placesMines: mBoard.
 	
-	strategy positions do: [ :pos | self assert: (mBoard boxAt: pos) isMineBox ]
+	strategy positions do: [ :pos | self assert: (mBoard boxAt: pos x at: pos y) isMineBox ]
 ]
 
 { #category : 'tests' }
