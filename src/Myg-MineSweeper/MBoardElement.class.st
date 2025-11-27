@@ -24,38 +24,40 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #MBoardElement,
-	#superclass : #BlElement,
+	#name : 'MBoardElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'game'
 	],
-	#category : #'Myg-MineSweeper-UI'
+	#category : 'Myg-MineSweeper-UI',
+	#package : 'Myg-MineSweeper',
+	#tag : 'UI'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> launchLarge [
 	"launch with zoom x2"
 	^ self withMatrixTest5x5WithMagnifier: 2
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> launchRegular [
 	^ self withMatrixTest5x5 
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> launchSmall [
 	"launch with zoom at 0.5"
 	^ self withMatrixTest5x5WithMagnifier: 0.5
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> launchVeryLarge [
 	"launch with zoom at x4"
 	^ self withMatrixTest5x5WithMagnifier: 4
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> open [
 	"open and manage the menu to select the size, open the game"
 	<script>
@@ -117,13 +119,13 @@ MBoardElement class >> open [
 	space show
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> openWithModel: aModel [
 	"open a MBoard with zoom at x1"
 	^ self openWithModel: aModel withMagnifier: 1
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoardElement class >> openWithModel: aModel withMagnifier: aNumber [
 	"open a MBoard with a zoom given"
 	| aGameElement space |
@@ -145,36 +147,36 @@ MBoardElement class >> openWithModel: aModel withMagnifier: aNumber [
 	^ space
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 MBoardElement class >> withMatrixForField [
 
 	^ self openWithModel: MBoard matrixForField
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 MBoardElement class >> withMatrixForFieldWithMagnifier: aNumber [
 
 	^ self openWithModel: MBoard matrixForField withMagnifier: aNumber 
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 MBoardElement class >> withMatrixTest5x5 [
 
 	^ self openWithModel: MBoard matrixTest5x5
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 MBoardElement class >> withMatrixTest5x5WithMagnifier: aNumber [
 
 	^ self openWithModel: MBoard matrixTest5x5 withMagnifier: aNumber 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoardElement >> game [ 
 	^ game
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoardElement >> game: aMBoard [
 	"store the model and adjust the padding according to the zoom
 	 show the UI"
@@ -187,7 +189,7 @@ MBoardElement >> game: aMBoard [
 		self addChild: boxElement ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MBoardElement >> initialize [
 
 	super initialize.

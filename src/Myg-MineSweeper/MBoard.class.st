@@ -6,17 +6,19 @@ I you want to play with me, have a look at 'player api' protocol.
 You may want to subscribe to my announcer to react to what is going on during the game. Access it using #announcer accessor. See MFieldAnnouncement to know what I can announce.
 "
 Class {
-	#name : #MBoard,
-	#superclass : #MygBoard,
+	#name : 'MBoard',
+	#superclass : 'MygBoard',
 	#instVars : [
 		'gameEnded',
 		'announcer',
 		'magnifier'
 	],
-	#category : #'Myg-MineSweeper-Model'
+	#category : 'Myg-MineSweeper-Model',
+	#package : 'Myg-MineSweeper',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoard class >> createWithMatrix: aMatrix [
 	"create board with matrix given"
 	^ self new
@@ -24,7 +26,7 @@ MBoard class >> createWithMatrix: aMatrix [
 		  yourself
 ]
 
-{ #category : #'test ressources' }
+{ #category : 'test ressources' }
 MBoard class >> matrixForField [
 	"create matrix 5x5 with mines at some fixed positions"
 	^ self createWithMatrix: ((CTNewArray2D
@@ -42,7 +44,7 @@ MBoard class >> matrixForField [
 			   yourself)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MBoard class >> matrixTest5x5 [
 	"create matrix 5x5 with MBOX random"
 	^ self createWithMatrix:
@@ -50,24 +52,24 @@ MBoard class >> matrixTest5x5 [
 			   MBox randomCase ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> announcer [
 	^ announcer
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 MBoard >> anyBoxSatisfy: aBlock [
 
 	^ grid anySatisfy: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> boxAt: x at: y [
 
 	^ grid at: x @ y
 ]
 
-{ #category : #enumerating2 }
+{ #category : 'enumerating2' }
 MBoard >> boxesAroundBox: aBox anySatisfy: aBlock [
 
 	self
@@ -76,7 +78,7 @@ MBoard >> boxesAroundBox: aBox anySatisfy: aBlock [
 	^ false
 ]
 
-{ #category : #enumerating2 }
+{ #category : 'enumerating2' }
 MBoard >> boxesAroundBox: aBox collect: aBlock [
 	"applies a block to each box and return a collection of boxes"
 	| collected |
@@ -87,7 +89,7 @@ MBoard >> boxesAroundBox: aBox collect: aBlock [
 	^ collected
 ]
 
-{ #category : #enumerating2 }
+{ #category : 'enumerating2' }
 MBoard >> boxesAroundBox: aBox do: aBlock [
 
 	self
@@ -95,7 +97,7 @@ MBoard >> boxesAroundBox: aBox do: aBlock [
 		doWithIndexes: [ :box :i :j | aBlock value: box ]
 ]
 
-{ #category : #enumerating2 }
+{ #category : 'enumerating2' }
 MBoard >> boxesAroundBox: aBox doWithIndexes: aBlock [
 	"execute aBlock for each block around the block "
 	|x y|
@@ -110,7 +112,7 @@ MBoard >> boxesAroundBox: aBox doWithIndexes: aBlock [
 				  aBlock value: (self boxAt: i at: j) value: i value: j ] ] ]
 ]
 
-{ #category : #enumerating2 }
+{ #category : 'enumerating2' }
 MBoard >> boxesAroundBox: aBox select: aBlock [
 
 	| collected |
@@ -121,7 +123,7 @@ MBoard >> boxesAroundBox: aBox select: aBlock [
 	^ collected
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 MBoard >> boxesDoWithIndices: aBlock [
 	"iterate the blocks (i,j) "
 	1 to: self height do: [ :i |
@@ -129,7 +131,7 @@ MBoard >> boxesDoWithIndices: aBlock [
 			aBlock value: (self boxAt: i at: j) value: i value: j ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 MBoard >> boxesSelect: aBlock [
 	"return a collection of the blocks "
 	| selected |
@@ -138,7 +140,7 @@ MBoard >> boxesSelect: aBlock [
 	^ selected
 ]
 
-{ #category : #'player api' }
+{ #category : 'player api' }
 MBoard >> clickOnBox: aBox [
 
 	| x y |
@@ -148,7 +150,7 @@ MBoard >> clickOnBox: aBox [
 	(self boxAt: x at: y) click
 ]
 
-{ #category : #'box api' }
+{ #category : 'box api' }
 MBoard >> flagCountAroundBox: aBox [
 	"count the number of flags around the box"
 	^ (self boxesAroundBox: aBox collect: [ :box |
@@ -157,59 +159,59 @@ MBoard >> flagCountAroundBox: aBox [
 			   ifFalse: [ 0 ] ]) sum
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> gameEnded [
 	^ gameEnded
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 MBoard >> hasBeenCleared [
 
 	^ (self boxesSelect: #isSafeBox) allSatisfy: #isClicked
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 MBoard >> hasClickedBoxAroundBox: aBox [
 
 	^ self boxesAroundBox: aBox anySatisfy: #isClicked
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 MBoard >> hasMineBoxAroundBox: aBox [
 
 	^ self boxesAroundBox: aBox anySatisfy: #isMineBox 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> height [
 
 	^ grid height
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MBoard >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	gameEnded := false.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> magnifier [ 
 	^ magnifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> magnifier: aNumber [
 	magnifier := aNumber 
 ]
 
-{ #category : #'player api' }
+{ #category : 'player api' }
 MBoard >> mineCount [
 	"total number of mines"
 	^ (self boxesSelect: #isMineBox) size
 ]
 
-{ #category : #'box api' }
+{ #category : 'box api' }
 MBoard >> mineCountAroundBox: aBox [
 	"count how many mines are around the box"
 	^ (self boxesAroundBox: aBox collect: [ :box |
@@ -218,7 +220,7 @@ MBoard >> mineCountAroundBox: aBox [
 			   ifFalse: [ 0 ] ]) sum
 ]
 
-{ #category : #'box api' }
+{ #category : 'box api' }
 MBoard >> playerLoose [
 
 	gameEnded := true.
@@ -226,7 +228,7 @@ MBoard >> playerLoose [
 	
 ]
 
-{ #category : #'box api' }
+{ #category : 'box api' }
 MBoard >> playerWin [
 
 	gameEnded ifTrue: [ ^ self ].
@@ -234,7 +236,7 @@ MBoard >> playerWin [
 	self revealBoard
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MBoard >> printOn: aStream [
 	aStream
 		<< self width asString;
@@ -248,7 +250,7 @@ MBoard >> printOn: aStream [
 		i = self width ifFalse: [ aStream	<< Smalltalk os lineEnding ] ]
 ]
 
-{ #category : #'box api' }
+{ #category : 'box api' }
 MBoard >> replaceBox: aBox by: aNewBox [
 
 	| x y |
@@ -257,7 +259,7 @@ MBoard >> replaceBox: aBox by: aNewBox [
 	grid at: x @ y put: aNewBox
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MBoard >> revealBoard [
 
 	self boxesDoWithIndices: [ :aBox :i :j |
@@ -266,14 +268,14 @@ MBoard >> revealBoard [
 			ifFalse: [ aBox announcer announce: MBoxExplosionAnnouncement new ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> rightFlagCountAroundBox: aBox [
 	"get the number of mines and the number of flags"
 	^ (self flagCountAroundBox: aBox)
 	  = (self mineCountAroundBox: aBox)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MBoard >> width [
 
 	^ grid width

@@ -21,12 +21,14 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #MineSweeper,
-	#superclass : #Object,
-	#category : #'Myg-MineSweeper-Model'
+	#name : 'MineSweeper',
+	#superclass : 'Object',
+	#category : 'Myg-MineSweeper-Model',
+	#package : 'Myg-MineSweeper',
+	#tag : 'Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MineSweeper class >> menuBar [
 	"create the menu bar"
 	| bar |
@@ -39,7 +41,7 @@ MineSweeper class >> menuBar [
 	^ bar
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MineSweeper class >> menuHelp [
 	"create the menu help and open instructions
 	 clickAction opens a new window"
@@ -83,7 +85,7 @@ Have fun !'.
 	^ menu
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MineSweeper class >> menuPlay [
 	"create menu Play with the different board size"
 	| menu |
@@ -114,7 +116,7 @@ MineSweeper class >> menuPlay [
 	^ menu
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MineSweeper class >> open [
 	"open the first window when launching the game"
 	<script>
@@ -135,7 +137,7 @@ MineSweeper class >> open [
 	space show
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MineSweeper class >> title [ 
 	|title|
 	title := BlElement new background: Color lightBlue.
@@ -151,6 +153,6 @@ MineSweeper class >> title [
 	^ title 
 ]
 
-{ #category : #'see class side' }
+{ #category : 'see class side' }
 MineSweeper >> seeClassSide [ 
 ]
