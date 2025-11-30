@@ -72,6 +72,11 @@ MBoard >> anyBoxSatisfy: aBlock [
 	^ grid anySatisfy: aBlock
 ]
 
+{ #category : 'as yet unclassified' }
+MBoard >> applyMinePlacement [
+    minePlacementStrategy placesMines: self.
+]
+
 { #category : 'accessing' }
 MBoard >> boxAt: x at: y [
 
@@ -229,6 +234,11 @@ MBoard >> mineCountAroundBox: aBox [
 			   ifFalse: [ 0 ] ]) sum
 ]
 
+{ #category : 'accessing' }
+MBoard >> minePlacementStrategy: aStrategy [
+    minePlacementStrategy := aStrategy.
+]
+
 { #category : 'box api' }
 MBoard >> playerLoose [
 
@@ -265,6 +275,9 @@ MBoard >> replaceBox: aBox by: aNewBox [
 	| x y |
 	x := aBox position x.
 	y := aBox position y.
+
+	aNewBox board: self.
+	aNewBox position: aBox position.
 	grid at: x @ y put: aNewBox
 ]
 
