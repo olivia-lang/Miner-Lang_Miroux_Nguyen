@@ -15,6 +15,24 @@ PlacingMineStrategyTest >> setUp [
 ]
 
 { #category : 'tests' }
+PlacingMineStrategyTest >> testEachColumnHasAMine [
+	"check each column of the board has a mine"
+
+	| strategy |
+	strategy := EachColumnMine new.
+	
+	strategy placesMines: mBoard.
+	
+	1 to: mBoard width do: [:col |
+        | minesInColumn |
+        minesInColumn := (1 to: mBoard height)
+            select: [:row | (mBoard boxAt: col at: row) isMineBox ].
+
+        self assert: minesInColumn size = 1
+    ].
+]
+
+{ #category : 'tests' }
 PlacingMineStrategyTest >> testFixedPositionMinesAreCorrect [
 	"test if the mines are placed at the fixed position given"
 
@@ -40,3 +58,16 @@ PlacingMineStrategyTest >> testFixedPositionMinesNoOtherMines [
 	self deny: (mBoard boxAt: 1 at: 4) isMineBox .
 	self deny: (mBoard boxAt: 1 at: 5) isMineBox .
 ]
+
+{ #category : 'tests' }
+PlacingMineStrategyTest >> testTotalNumberOfMines [
+	"check on a board 5x5 there is 5 mines"
+
+	| strategy |
+	strategy := EachColumnMine new.
+	
+	strategy placesMines: mBoard.
+	
+	self assert: mBoard mineCount = mBoard width.
+]
+
