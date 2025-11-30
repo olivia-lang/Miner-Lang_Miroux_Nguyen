@@ -34,10 +34,25 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'as yet unclassified' }
+MBoardElement class >> launchEachColumnPlacement [
+	^ self launchWithStrategy: EachColumnMine new
+]
+
+{ #category : 'as yet unclassified' }
+MBoardElement class >> launchFixedPositionPlacement [
+	^ self launchWithStrategy: FixedPositionMine new
+]
+
 { #category : 'instance creation' }
 MBoardElement class >> launchLarge [
 	"launch with zoom x2"
 	^ self withMatrixTest5x5WithMagnifier: 2
+]
+
+{ #category : 'as yet unclassified' }
+MBoardElement class >> launchRandomPlacement [
+	^ self launchWithStrategy: RandomMine new
 ]
 
 { #category : 'instance creation' }
@@ -55,6 +70,15 @@ MBoardElement class >> launchSmall [
 MBoardElement class >> launchVeryLarge [
 	"launch with zoom at x4"
 	^ self withMatrixTest5x5WithMagnifier: 4
+]
+
+{ #category : 'as yet unclassified' }
+MBoardElement class >> launchWithStrategy: aStrategy [
+	| board |
+	board := MBoard createWithMatrix: (CTNewArray2D width: 5 height: 5 tabulate: [ :column :row | MBox safe ]).
+	board minePlacementStrategy: aStrategy.
+	board applyMinePlacement.
+	^ self openWithModel: board
 ]
 
 { #category : 'instance creation' }
