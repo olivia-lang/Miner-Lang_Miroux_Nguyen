@@ -11,7 +11,8 @@ Class {
 	#instVars : [
 		'gameEnded',
 		'announcer',
-		'magnifier'
+		'magnifier',
+		'minePlacementStrategy'
 	],
 	#category : 'Myg-MineSweeper-Model',
 	#package : 'Myg-MineSweeper',
