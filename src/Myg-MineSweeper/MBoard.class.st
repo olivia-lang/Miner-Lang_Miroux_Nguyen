@@ -52,6 +52,15 @@ MBoard class >> matrixTest5x5 [
 			   MBox randomCase ])
 ]
 
+{ #category : 'enumerating2' }
+MBoard >> allBoxes [
+^ (1 to: self width) flatCollect: [:x |
+        (1 to: self height) collect: [:y |
+            self boxAt: x at: y
+        ]
+    ].
+]
+
 { #category : 'accessing' }
 MBoard >> announcer [
 	^ announcer
