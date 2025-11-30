@@ -38,6 +38,7 @@ This method is called in **MBoard** class :
 ### Modifications & Designs
 
 ![uml](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_UML_placingMines.png)
+
 I introduce new algorithms for placing mines : 
 - a mine in each column (if we have a grid of 5x5, we're going to have 5 mines)
 - mines are fixed in some position (for i.e (2,2), (4,0) etc.)
@@ -66,7 +67,7 @@ I modify the UI : I added a menu where the player can choose the mine placement.
 ![MineSweeper random](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinesRandom.png)
 ![MineSweeper fixed](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinsFixedPosition.png)
 ![MineSweeper column](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinesEachColumn.png)
-
+> See [tag for the UI](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/releases/tag/Placing-mines-algorithms-v2)
 ### Tests
 
 Initially, there is no tests for the method _randomCase_ because since it randomly places the mine, it can be difficult for the test to define if it is true or false.
