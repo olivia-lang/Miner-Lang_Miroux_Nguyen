@@ -86,6 +86,30 @@ Have fun !'.
 ]
 
 { #category : 'as yet unclassified' }
+MineSweeper class >> menuPlaceMine [
+	"create menu Choose Mines with the differents placing mines algorithms"
+	| menu |
+	menu := ToMenu new.
+	menu labelText: 'Choose Mines'.
+	menu iconImage: (Smalltalk ui icons iconNamed: #solidMenu).
+	menu addItem:
+		(ToMenuItem new labelText: 'Random ';
+			clickAction: [ MBoardElement launchRandomPlacement ];
+			yourself).
+	menu addItem:
+		(ToMenuItem new labelText: 'In Each Column ';
+			clickAction: [ MBoardElement launchEachColumnPlacement ];
+			yourself).
+	
+	menu addItem:
+		(ToMenuItem new labelText: 'Fixed Position ';
+			clickAction: [ MBoardElement launchFixedPositionPlacement ];
+			yourself).
+	
+	^ menu
+]
+
+{ #category : 'as yet unclassified' }
 MineSweeper class >> menuPlay [
 	"create menu Play with the different board size"
 	| menu |
@@ -120,13 +144,15 @@ MineSweeper class >> menuPlay [
 MineSweeper class >> open [
 	"open the first window when launching the game"
 	<script>
-	| space playMenu helpMenu bar title |
+	| space playMenu helpMenu mineMenu bar title |
 	playMenu := self menuPlay.
+	mineMenu := self menuPlaceMine.
 	helpMenu := self menuHelp.
 	bar := self menuBar.
 	title := self title.
 
 	bar addItem: playMenu.
+	bar addItem: mineMenu.
 	bar addItem: helpMenu.
 	space := BlSpace new.
 
