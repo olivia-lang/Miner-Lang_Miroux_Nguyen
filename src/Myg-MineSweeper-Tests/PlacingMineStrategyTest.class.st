@@ -60,6 +60,31 @@ PlacingMineStrategyTest >> testFixedPositionMinesNoOtherMines [
 ]
 
 { #category : 'tests' }
+PlacingMineStrategyTest >> testRandomMineNoNilBoxes [
+ 	"check when randomly placing mines, boxes are not nil"   
+	| strategy |
+    strategy := RandomMine new.
+
+    strategy placesMines: mBoard.
+
+    mBoard allBoxes do: [:box | self assert: box notNil ].
+]
+
+{ #category : 'tests' }
+PlacingMineStrategyTest >> testRandomPlacingMines [
+	"check each box of the board is either mine or safe"
+
+	| strategy |
+	strategy := RandomMine new.
+	
+	strategy placesMines: mBoard.
+	
+	mBoard allBoxes do: [:box |
+        self assert: (box isMineBox or: box isSafeBox)
+    ].
+]
+
+{ #category : 'tests' }
 PlacingMineStrategyTest >> testTotalNumberOfMines [
 	"check on a board 5x5 there is 5 mines"
 
