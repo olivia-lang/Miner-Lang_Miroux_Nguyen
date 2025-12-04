@@ -12,7 +12,8 @@ Class {
 		'gameEnded',
 		'announcer',
 		'magnifier',
-		'minePlacementStrategy'
+		'minePlacementStrategy',
+		'selectionCount'
 	],
 	#category : 'Myg-MineSweeper-Model',
 	#package : 'Myg-MineSweeper',
@@ -157,11 +158,19 @@ MBoard >> boxesSelect: aBlock [
 
 { #category : 'player api' }
 MBoard >> clickOnBox: aBox [
-
 	| x y |
 	gameEnded ifTrue: [ ^ self ].
 	x := aBox position x.
 	y := aBox position y.
+	
+	"Only count when click on unclicked and unflagged box"
+	(self boxAt: x at: y) isClicked ifFalse: [
+		(self boxAt: x at: y) isFlagged ifFalse: [
+			self incrementSelectionCount
+		]
+	].
+	self incrementSelectionCount.
+	
 	(self boxAt: x at: y) click
 ]
 
@@ -203,11 +212,18 @@ MBoard >> height [
 	^ grid height
 ]
 
+{ #category : 'accessing' }
+MBoard >> incrementSelectionCount [ 
+	selectionCount := selectionCount + 1.
+	self announcer announce: MSelectionCountChangedAnnouncement new.
+]
+
 { #category : 'initialization' }
 MBoard >> initialize [
 	super initialize.
 	announcer := Announcer new.
 	gameEnded := false.
+	selectionCount := 0.
 ]
 
 { #category : 'accessing' }
@@ -282,6 +298,12 @@ MBoard >> replaceBox: aBox by: aNewBox [
 	grid at: x @ y put: aNewBox
 ]
 
+{ #category : 'player api' }
+MBoard >> resetSelectionCount [ 
+	selectionCount := 0.
+	self announcer announce: MSelectionCountChangedAnnouncement new.
+]
+
 { #category : 'as yet unclassified' }
 MBoard >> revealBoard [
 
@@ -296,6 +318,11 @@ MBoard >> rightFlagCountAroundBox: aBox [
 	"get the number of mines and the number of flags"
 	^ (self flagCountAroundBox: aBox)
 	  = (self mineCountAroundBox: aBox)
+]
+
+{ #category : 'accessing' }
+MBoard >> selectionCount [ 
+	^ selectionCount
 ]
 
 { #category : 'accessing' }

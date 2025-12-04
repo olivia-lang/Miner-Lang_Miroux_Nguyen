@@ -195,6 +195,34 @@ MBoardElement class >> withMatrixTest5x5WithMagnifier: aNumber [
 	^ self openWithModel: MBoard matrixTest5x5 withMagnifier: aNumber 
 ]
 
+{ #category : 'UI' }
+MBoardElement >> createCounterDisplay [
+	| counterContainer counterText |
+	
+	counterContainer := BlElement new.
+	counterContainer 
+		background: (Color white alpha: 0.9);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
+		padding: (BlInsets all: 10 * game magnifier);
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ].
+	
+	counterText := BlTextElement new.
+	counterText text: ('Selections: 0' asRopedText 
+		fontSize: (20 * game magnifier);
+		fontName: 'Source Sans Pro';
+		bold).
+	
+	counterContainer addChild: counterText.
+	
+	"Save reference for later update"
+	counterContainer id: #selectionCounter.
+	
+	self addChild: counterContainer.
+]
+
 { #category : 'accessing' }
 MBoardElement >> game [ 
 	^ game
@@ -207,10 +235,20 @@ MBoardElement >> game: aMBoard [
 	game := aMBoard.
 	self padding: (BlInsets all: 5 * game magnifier).
 	self layout columnCount: game width.
+	
+	self createCounterDisplay.
+	
+	"Subscribe to selection count changes"
+	game announcer 
+		when: MSelectionCountChangedAnnouncement 
+		send: #updateCounterDisplay 
+		to: self.
+	
 	game grid do: [ :aBox |
 		| boxElement |
 		boxElement := MBoxElement createWithBox: aBox.
 		self addChild: boxElement ]
+	
 ]
 
 { #category : 'initialization' }
@@ -222,4 +260,17 @@ MBoardElement >> initialize [
 	self constraintsDo: [ :aLayoutConstraints |
 		aLayoutConstraints horizontal fitContent.
 		aLayoutConstraints vertical fitContent ]
+]
+
+{ #category : 'UI' }
+MBoardElement >> updateCounterDisplay [ 
+	| counterContainer counterText |
+	
+	counterContainer := self childWithId: #selectionCounter ifNone: [ ^ self ].
+	counterText := counterContainer children first.
+	
+	counterText text: (('Selections: ', game selectionCount asString) asRopedText 
+		fontSize: (20 * game magnifier);
+		fontName: 'Source Sans Pro';
+		bold).
 ]
