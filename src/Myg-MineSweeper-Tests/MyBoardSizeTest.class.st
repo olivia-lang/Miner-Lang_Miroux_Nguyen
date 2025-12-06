@@ -27,3 +27,13 @@ MyBoardSizeTest >> testCreateBoardWithAnySize [
     self assert: board height equals: 20.
     self assert: (board boxAt: 40 at: 15) isNotNil.
 ]
+
+{ #category : 'tests' }
+MyBoardSizeTest >> testRandomMineStrategyRespectAnyBoardSize [
+	 | board strategy |
+    board := MBoard width: 20 height: 2.
+    strategy := RandomMine new.  
+    strategy placesMines: board.
+	 "Verify if we have mine"
+    self assert: (board allBoxes anySatisfy: [ :box | box isMineBox ]).
+]
