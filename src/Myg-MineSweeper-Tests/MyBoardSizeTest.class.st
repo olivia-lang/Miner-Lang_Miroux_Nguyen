@@ -6,6 +6,18 @@ Class {
 }
 
 { #category : 'tests' }
+MyBoardSizeTest >> testBoardInitializedWithSafeBoxes [
+	 | board |
+    board := MBoard width: 3 height: 3.
+    board allBoxes do: [ :box | 
+        self assert: box class equals: MSafeBox.
+        self assert: box position isNotNil.
+    ].
+    
+    self assert: board allBoxes size equals: 9.
+]
+
+{ #category : 'tests' }
 MyBoardSizeTest >> testCreateBoardWithAnySize [
     
     | board |
