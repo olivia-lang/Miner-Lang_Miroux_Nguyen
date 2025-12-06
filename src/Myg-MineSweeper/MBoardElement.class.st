@@ -47,7 +47,7 @@ MBoardElement class >> launchFixedPositionPlacement [
 { #category : 'instance creation' }
 MBoardElement class >> launchLarge [
 	"launch with zoom x2"
-	^ self withMatrixTest5x5WithMagnifier: 2
+	^ self launchWithStrategy: RandomMine new width: 12 height: 12
 ]
 
 { #category : 'as yet unclassified' }
@@ -57,19 +57,19 @@ MBoardElement class >> launchRandomPlacement [
 
 { #category : 'instance creation' }
 MBoardElement class >> launchRegular [
-	^ self withMatrixTest5x5 
+	^ self launchWithStrategy: FixedPositionMine new width: 8 height: 8
 ]
 
 { #category : 'instance creation' }
 MBoardElement class >> launchSmall [
 	"launch with zoom at 0.5"
-	^ self withMatrixTest5x5WithMagnifier: 0.5
+	^ self launchWithStrategy: RandomMine new width: 5 height: 5
 ]
 
 { #category : 'instance creation' }
 MBoardElement class >> launchVeryLarge [
 	"launch with zoom at x4"
-	^ self withMatrixTest5x5WithMagnifier: 4
+	^ self launchWithStrategy: RandomMine new width: 20 height: 20
 ]
 
 { #category : 'as yet unclassified' }
