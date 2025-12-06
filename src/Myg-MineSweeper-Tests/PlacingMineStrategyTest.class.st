@@ -10,8 +10,8 @@ Class {
 
 { #category : 'running' }
 PlacingMineStrategyTest >> setUp [
-	
-	mBoard := MBoard createWithMatrix: (CTNewArray2D width: 5 height: 5 tabulate: [ :column :row | MBox safe ])
+	super setUp.
+	mBoard := MBoard width: 5 height: 5
 ]
 
 { #category : 'tests' }
