@@ -95,4 +95,3 @@ PlacingMineStrategyTest >> testTotalNumberOfMines [
 	
 	self assert: mBoard mineCount = mBoard width.
 ]
-
