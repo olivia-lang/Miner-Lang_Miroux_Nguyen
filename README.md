@@ -16,6 +16,7 @@ MineSweeper open
 ```
 
 ## Introduce different algorithms for placing mines
+Olivia
 ### Existing method
 
 There is one method for placing mines in the **MBox** class : 
@@ -63,7 +64,7 @@ RandomMine >> placesMines : aBoard
 So we have 2/8 chances to replace the box by a mine box. It is the line <code>isMine := (0 to: 1) atRandom < (2/8).</code> that decides.
 > See [tag for this kata](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/releases/tag/Placing-mines-algorithms-v1)
 
-I modify the UI : I added a menu where the player can choose the mine placement. For this, I modify the class **MineSweeper** for the display of the menu and **MBoardElement* to launch the game according to the strategy chosen.
+I modify the UI : I added a menu where the player can choose the mine placement. For this, I modify the class **MineSweeper** for the display of the menu and **MBoardElement** to launch the game according to the strategy chosen.
 ![MineSweeper random](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinesRandom.png)
 ![MineSweeper fixed](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinsFixedPosition.png)
 ![MineSweeper column](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_MinesEachColumn.png)
@@ -120,7 +121,7 @@ MBoard >> replaceBox: aBox by: aNewBox
 	grid at: x @ y put: aNewBox
 ```
 ## Introduce the possibility to change the size of the land mine.
-
+Julien
 ### The design before changes
 
 Previously, the board size was "hardcoded" with only one size 5X5.
