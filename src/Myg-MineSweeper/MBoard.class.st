@@ -53,6 +53,13 @@ MBoard class >> matrixTest5x5 [
 			   MBox randomCase ])
 ]
 
+{ #category : 'instance creation' }
+MBoard class >> width: width height: height [
+"Create a board with specifid size"
+    ^ self createWithMatrix: (CTNewArray2D 
+        width: width height: height tabulate: [ :column :row | MBox safe ])
+]
+
 { #category : 'enumerating2' }
 MBoard >> allBoxes [
 ^ (1 to: self width) flatCollect: [:x |
