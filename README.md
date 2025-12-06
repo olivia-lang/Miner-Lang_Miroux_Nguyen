@@ -119,3 +119,30 @@ MBoard >> replaceBox: aBox by: aNewBox
 
 	grid at: x @ y put: aNewBox
 ```
+## Introduce the possibility to change the size of the land mine.
+
+### The design before changes
+
+Previously, the board size was "hardcoded" with only one size 5X5.
+```
+ matrixTest5x5 
+	^ self createWithMatrix:
+		  (CTNewArray2D width: 5 height: 5 tabulate: [ :column :row |
+ 			MBox randomCase ])
+```
+The big problem is the rigidity of the code, if you want another size of board you have to create another classe matrixTest8X8 ... its an explosion of class.
+
+The other problem is that all method launchSmall,launchLarge,LaunchRegular call matrixTest5X5 so it don't make any sense the only thing that difer in those classes is the magnifier.
+
+### Modifications & Designs
+
+I use a Factory Method pattern to handle board creation.
+
+Instead of having subclasses for different sizes, i implemented a class-side method in MBoard. This method take dimensions as parameters (width and height)  
+```
+width: width height: height
+"Create a board with specifid size"
+    ^ self createWithMatrix: (CTNewArray2D 
+        width: width height: height tabulate: [ :column :row | MBox safe ])
+```
+
