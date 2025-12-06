@@ -81,6 +81,15 @@ MBoardElement class >> launchWithStrategy: aStrategy [
 	^ self openWithModel: board
 ]
 
+{ #category : 'as yet unclassified' }
+MBoardElement class >> launchWithStrategy: aStrategy width: width height: height [
+	| board |
+	board := MBoard width: width height: height.
+	board minePlacementStrategy: aStrategy.
+	board applyMinePlacement.
+   ^ self openWithModel: board
+]
+
 { #category : 'instance creation' }
 MBoardElement class >> open [
 	"open and manage the menu to select the size, open the game"
