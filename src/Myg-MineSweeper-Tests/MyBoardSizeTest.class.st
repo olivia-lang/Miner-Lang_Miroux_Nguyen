@@ -29,6 +29,13 @@ MyBoardSizeTest >> testCreateBoardWithAnySize [
 ]
 
 { #category : 'tests' }
+MyBoardSizeTest >> testInvalidDimensionBoard [
+
+self should: [ MBoard width: 0 height: 0 ] raise: Error.
+self should: [ MBoard width: -1 height: 5 ] raise: Error.
+]
+
+{ #category : 'tests' }
 MyBoardSizeTest >> testRandomMineStrategyRespectAnyBoardSize [
 	 | board strategy |
     board := MBoard width: 20 height: 2.
