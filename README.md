@@ -145,4 +145,75 @@ width: width height: height
     ^ self createWithMatrix: (CTNewArray2D 
         width: width height: height tabulate: [ :column :row | MBox safe ])
 ```
+I updated/reused the method of Olivia launchWithStrategy: aStrategy to adapt with my new factory method
 
+```
+launchWithStrategy: aStrategy width: width height: height
+	| board |
+	board := MBoard width: width height: height.
+	board minePlacementStrategy: aStrategy.
+	board applyMinePlacement.
+   ^ self openWithModel: board
+```
+
+So now in my launchSmall,launchRegular and other launchX method i use launchWithStrategy: aStrategy width: width height: height
+```
+launchVeryLarge
+	"launch with zoom at x4"
+	^ self launchWithStrategy: RandomMine new width: 20 height: 20
+
+launchRegular
+	^ self launchWithStrategy: FixedPositionMine new width: 8 height: 8
+```
+
+Now when you play in Regular mode you will have a board of 8X8 size.
+### Tests
+I started to create a class test "MyBoardSizeTest" 
+
+The first test is to verify that we can have any type of size for our board.
+```
+testCreateBoardWithAnySize
+    
+    | board |
+   
+    board := MBoard width: 40 height: 20.
+    self assert: board width equals: 40.
+    self assert: board height equals: 20.
+    self assert: (board boxAt: 40 at: 15) isNotNil.
+```
+
+Otherwise i have a test to verify that you can't initilize a board with wrong dimension
+```
+testInvalidDimensionBoard
+
+self should: [ MBoard width: 0 height: 0 ] raise: Error.
+self should: [ MBoard width: -1 height: 5 ] raise: Error.
+
+```
+
+I also created a test testBoardInitializedWithSafeBoxes to be sure that all the box are SafeBoxes after the creation of the board.
+And to finish a test to be sure that the strategy are well apply to my board
+```
+testRandomMineStrategyRespectAnyBoardSize
+	 | board strategy |
+    board := MBoard width: 20 height: 2.
+    strategy := RandomMine new.  
+    strategy placesMines: board.
+	 "Verify if we have mine"
+    self assert: (board allBoxes anySatisfy: [ :box | box isMineBox ]).
+```
+
+### Difficulties
+
+One of the difficulty was to use and make it work the magnifier, indeed before in launchSmall,launchLarge we haved a parameter magnifier to adapt the screen(Zoom) according to the size of the board.
+It wasn't working before, so for now I've removed it from the game board creation. I think if i understood we have to modify that in **MBoardElement >> game: aMBoard**
+So if the magnifier are resolved we can add in **launchWithStrategy: aStrategy** : 
+```
+^ self openWithModel: board withMagnifier: magnifier
+```
+
+
+### For the future
+
+It would be interesting if, after choosing the size of their board, they could also choose the mines algorithm.
+Furthermore, we could add the fact that the user can enter the dimensions of their board themselves.
