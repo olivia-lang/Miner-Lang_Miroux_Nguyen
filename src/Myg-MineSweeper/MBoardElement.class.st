@@ -207,7 +207,7 @@ MBoardElement >> applyBoardTheme [
 
 { #category : 'UI' }
 MBoardElement >> createCounterDisplay [ 
-	| counterContainer counterText mineCountText statsContainer |
+	| statsContainer selectionText mineText |
 	
 	statsContainer := BlElement new.
 	statsContainer 
@@ -218,39 +218,25 @@ MBoardElement >> createCounterDisplay [
 		padding: (BlInsets all: 15 * game magnifier);
 		constraintsDo: [ :c |
 			c horizontal fitContent.
-			c vertical fitContent ].
+			c vertical fitContent ];
+		id: #statsContainer.
 	
-	"Selection counter"
-	counterContainer := BlElement new.
-	counterContainer 
-		layout: BlLinearLayout vertical;
-		constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent ].
-	
-	counterText := BlTextElement new.
-	counterText text: ('Selections: 0' asRopedText 
+	"Selection counter text"
+	selectionText := BlTextElement new text: ('Selections: 0' asRopedText 
 		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
 		bold;
 		foreground: (Color r: 0.2 g: 0.4 b: 0.8)).
 	
-	counterContainer addChild: counterText.
-	
-	"Mine counter"
-	mineCountText := BlTextElement new.
-	mineCountText text: (('Mines: ', game mineCount asString) asRopedText 
+	"Mine counter text"
+	mineText := BlTextElement new text: (('Mines: ', game mineCount asString) asRopedText 
 		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
 		bold;
 		foreground: Color red darker).
 	
-	statsContainer addChild: counterContainer.
-	statsContainer addChild: mineCountText.
-	
-	"Lưu reference"
-	statsContainer id: #statsContainer.
-	counterText id: #counterText.
+	statsContainer addChild: selectionText.
+	statsContainer addChild: mineText.
 	
 	"Thêm vào main container"
 	self addChild: statsContainer.
@@ -291,32 +277,25 @@ MBoardElement >> game [
 
 { #category : 'accessing' }
 MBoardElement >> game: aMBoard [
-	"store the model and adjust the padding according to the zoom
-	 show the UI"
+	"Tạo 2 containers riêng biệt: counterContainer và gameGrid"
 	game := aMBoard.
-	self padding: (BlInsets all: 5 * game magnifier).
-	self layout columnCount: game width.
 	
+	"1. Tạo counter display ở TRÊN"
 	self createCounterDisplay.
 	
+	"2. Tạo game grid container ở DƯỚI"
 	self createGameGrid.
 	
-	"Subscribe to selection count changes"
+	"3. Subscribe to announcements"
 	game announcer 
 		when: MSelectionCountChangedAnnouncement 
 		send: #updateCounterDisplay 
 		to: self.
-		
+	
 	game announcer 
 		when: MThemeChangedAnnouncement 
 		send: #applyBoardTheme 
 		to: self.
-	
-	game grid do: [ :aBox |
-		| boxElement |
-		boxElement := MBoxElement createWithBox: aBox.
-		self addChild: boxElement ]
-	
 ]
 
 { #category : 'initialization' }
