@@ -319,7 +319,7 @@ MBoardElement >> updateCounterDisplay [
 		ifFound: [ :found | found ] 
 		ifNone: [ ^ self ].
 	
-	counterText text: (('Selections: ', game selectionCount asString) asRopedText 
+	counterText text: (('Selections123: ', game selectionCount asString) asRopedText 
 		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
 		bold;
