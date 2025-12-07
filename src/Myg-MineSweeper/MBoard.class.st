@@ -13,7 +13,8 @@ Class {
 		'announcer',
 		'magnifier',
 		'minePlacementStrategy',
-		'selectionCount'
+		'selectionCount',
+		'currentTheme'
 	],
 	#category : 'Myg-MineSweeper-Model',
 	#package : 'Myg-MineSweeper',
@@ -77,6 +78,20 @@ MBoard >> anyBoxSatisfy: aBlock [
 { #category : 'as yet unclassified' }
 MBoard >> applyMinePlacement [
     minePlacementStrategy placesMines: self.
+]
+
+{ #category : 'accessing' }
+MBoard >> applyTheme: aThemeName [
+	"Apply theme"
+	| theme |
+	theme := aThemeName = 'Classic' 
+		ifTrue: [ MineSweeperTheme classic ]
+		ifFalse: [ 
+			aThemeName = 'Dark'
+				ifTrue: [ MineSweeperTheme dark ]
+				ifFalse: [ MineSweeperTheme ocean ]
+		].
+	self currentTheme: theme.
 ]
 
 { #category : 'accessing' }
@@ -158,20 +173,30 @@ MBoard >> boxesSelect: aBlock [
 
 { #category : 'player api' }
 MBoard >> clickOnBox: aBox [
-	| x y |
+	| x y boxToClick |
 	gameEnded ifTrue: [ ^ self ].
+	
 	x := aBox position x.
 	y := aBox position y.
+	boxToClick := self boxAt: x at: y.
 	
 	"Only count when click on unclicked and unflagged box"
-	(self boxAt: x at: y) isClicked ifFalse: [
-		(self boxAt: x at: y) isFlagged ifFalse: [
-			self incrementSelectionCount
-		]
+	(boxToClick isClicked not and: [ boxToClick isFlagged not ]) ifTrue: [
+		self incrementSelectionCount
 	].
-	self incrementSelectionCount.
 	
-	(self boxAt: x at: y) click
+	boxToClick click
+]
+
+{ #category : 'accessing' }
+MBoard >> currentTheme [ 
+	^ currentTheme ifNil: [ currentTheme := MineSweeperTheme classic ]
+]
+
+{ #category : 'accessing' }
+MBoard >> currentTheme: aTheme [
+	currentTheme := aTheme.
+	self announcer announce: MThemeChangedAnnouncement new
 ]
 
 { #category : 'box api' }
@@ -216,6 +241,7 @@ MBoard >> height [
 MBoard >> incrementSelectionCount [ 
 	selectionCount := selectionCount + 1.
 	self announcer announce: MSelectionCountChangedAnnouncement new.
+	Transcript show: 'Selection count: ', selectionCount asString; cr.
 ]
 
 { #category : 'initialization' }
@@ -224,6 +250,7 @@ MBoard >> initialize [
 	announcer := Announcer new.
 	gameEnded := false.
 	selectionCount := 0.
+	currentTheme := MineSweeperTheme classic.
 ]
 
 { #category : 'accessing' }
@@ -322,7 +349,7 @@ MBoard >> rightFlagCountAroundBox: aBox [
 
 { #category : 'accessing' }
 MBoard >> selectionCount [ 
-	^ selectionCount
+	^ selectionCount ifNil: [ selectionCount := 0 ]
 ]
 
 { #category : 'accessing' }

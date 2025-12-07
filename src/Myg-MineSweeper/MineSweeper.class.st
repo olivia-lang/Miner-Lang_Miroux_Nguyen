@@ -28,6 +28,17 @@ Class {
 	#tag : 'Model'
 }
 
+{ #category : 'theme' }
+MineSweeper class >> applyThemeToAllBoards: aThemeName [
+	BlSpace allInstances do: [ :space |
+		space root children do: [ :child |
+			(child isKindOf: MBoardElement) ifTrue: [
+				child game applyTheme: aThemeName
+			]
+		]
+	]
+]
+
 { #category : 'as yet unclassified' }
 MineSweeper class >> menuBar [
 	"create the menu bar"
@@ -137,6 +148,34 @@ MineSweeper class >> menuPlay [
 			clickAction: [ MBoardElement launchVeryLarge ];
 			yourself).
 
+	^ menu
+]
+
+{ #category : 'menu' }
+MineSweeper class >> menuTheme [ 
+	| menu |
+	menu := ToMenu new.
+	menu labelText: 'Theme'.
+	menu iconImage: (Smalltalk ui icons iconNamed: #paint).
+	
+	menu addItem:
+		(ToMenuItem new 
+			labelText: 'Classic';
+			clickAction: [ self applyThemeToAllBoards: 'Classic' ];
+			yourself).
+	
+	menu addItem:
+		(ToMenuItem new 
+			labelText: 'Dark';
+			clickAction: [ self applyThemeToAllBoards: 'Dark' ];
+			yourself).
+	
+	menu addItem:
+		(ToMenuItem new 
+			labelText: 'Ocean';
+			clickAction: [ self applyThemeToAllBoards: 'Ocean' ];
+			yourself).
+	
 	^ menu
 ]
 

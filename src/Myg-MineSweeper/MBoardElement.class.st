@@ -195,32 +195,93 @@ MBoardElement class >> withMatrixTest5x5WithMagnifier: aNumber [
 	^ self openWithModel: MBoard matrixTest5x5 withMagnifier: aNumber 
 ]
 
-{ #category : 'UI' }
-MBoardElement >> createCounterDisplay [
-	| counterContainer counterText |
+{ #category : 'theme' }
+MBoardElement >> applyBoardTheme [ 
+	| gameGrid |
+	self background: (BlBackground paint: game currentTheme boardColor).
 	
+	"Update grid background nếu cần"
+	gameGrid := self childWithId: #gameGrid ifNone: [ ^ self ].
+	"Grid background có thể giữ nguyên hoặc update theo theme"
+]
+
+{ #category : 'UI' }
+MBoardElement >> createCounterDisplay [ 
+	| counterContainer counterText mineCountText statsContainer |
+	
+	statsContainer := BlElement new.
+	statsContainer 
+		layout: (BlLinearLayout horizontal cellSpacing: 20);
+		background: (Color r: 0.95 g: 0.95 b: 0.98);
+		border: (BlBorder paint: Color gray width: 2);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 8);
+		padding: (BlInsets all: 15 * game magnifier);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ].
+	
+	"Selection counter"
 	counterContainer := BlElement new.
 	counterContainer 
-		background: (Color white alpha: 0.9);
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 5);
-		padding: (BlInsets all: 10 * game magnifier);
-		layout: BlLinearLayout horizontal;
+		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent ].
 	
 	counterText := BlTextElement new.
 	counterText text: ('Selections: 0' asRopedText 
-		fontSize: (20 * game magnifier);
+		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
-		bold).
+		bold;
+		foreground: (Color r: 0.2 g: 0.4 b: 0.8)).
 	
 	counterContainer addChild: counterText.
 	
-	"Save reference for later update"
-	counterContainer id: #selectionCounter.
+	"Mine counter"
+	mineCountText := BlTextElement new.
+	mineCountText text: (('Mines: ', game mineCount asString) asRopedText 
+		fontSize: (18 * game magnifier);
+		fontName: 'Source Sans Pro';
+		bold;
+		foreground: Color red darker).
 	
-	self addChild: counterContainer.
+	statsContainer addChild: counterContainer.
+	statsContainer addChild: mineCountText.
+	
+	"Lưu reference"
+	statsContainer id: #statsContainer.
+	counterText id: #counterText.
+	
+	"Thêm vào main container"
+	self addChild: statsContainer.
+]
+
+{ #category : 'UI' }
+MBoardElement >> createGameGrid [ 
+	| gameGridContainer |
+	
+	gameGridContainer := BlElement new.
+	gameGridContainer 
+		layout: (BlGridLayout horizontal cellSpacing: 5);
+		padding: (BlInsets all: 5 * game magnifier);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ].
+	
+	"Set số cột cho grid"
+	gameGridContainer layout columnCount: game width.
+	
+	"Thêm các box elements vào grid"
+	game grid do: [ :aBox |
+		| boxElement |
+		boxElement := MBoxElement createWithBox: aBox.
+		gameGridContainer addChild: boxElement ].
+	
+	"Lưu id để dễ access sau"
+	gameGridContainer id: #gameGrid.
+	
+	"Thêm grid container vào main container"
+	self addChild: gameGridContainer.
 ]
 
 { #category : 'accessing' }
@@ -238,10 +299,17 @@ MBoardElement >> game: aMBoard [
 	
 	self createCounterDisplay.
 	
+	self createGameGrid.
+	
 	"Subscribe to selection count changes"
 	game announcer 
 		when: MSelectionCountChangedAnnouncement 
 		send: #updateCounterDisplay 
+		to: self.
+		
+	game announcer 
+		when: MThemeChangedAnnouncement 
+		send: #applyBoardTheme 
 		to: self.
 	
 	game grid do: [ :aBox |
@@ -256,7 +324,7 @@ MBoardElement >> initialize [
 
 	super initialize.
 	self background: (BlBackground paint: Color veryVeryLightGray).
-	self layout: (BlGridLayout horizontal cellSpacing: 5).
+	self layout: (BlGridLayout horizontal cellSpacing: 10).
 	self constraintsDo: [ :aLayoutConstraints |
 		aLayoutConstraints horizontal fitContent.
 		aLayoutConstraints vertical fitContent ]
@@ -264,13 +332,17 @@ MBoardElement >> initialize [
 
 { #category : 'UI' }
 MBoardElement >> updateCounterDisplay [ 
-	| counterContainer counterText |
+	| statsContainer counterText |
 	
-	counterContainer := self childWithId: #selectionCounter ifNone: [ ^ self ].
-	counterText := counterContainer children first.
+	statsContainer := self childWithId: #statsContainer ifNone: [ ^ self ].
+	counterText := statsContainer allChildrenBreadthFirstDetect: 
+		[ :child | (child respondsTo: #id) and: [ child id = #counterText ] ] 
+		ifFound: [ :found | found ] 
+		ifNone: [ ^ self ].
 	
 	counterText text: (('Selections: ', game selectionCount asString) asRopedText 
-		fontSize: (20 * game magnifier);
+		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
-		bold).
+		bold;
+		foreground: (Color r: 0.2 g: 0.4 b: 0.8)).
 ]
