@@ -200,14 +200,15 @@ MBoardElement >> applyBoardTheme [
 	| gameGrid |
 	self background: (BlBackground paint: game currentTheme boardColor).
 	
-	"Update grid background nếu cần"
+	"Update all box elements with new theme"
 	gameGrid := self childWithId: #gameGrid ifNone: [ ^ self ].
-	"Grid background có thể giữ nguyên hoặc update theo theme"
+	gameGrid children do: [ :boxElement |
+		boxElement applyTheme: game currentTheme ].
 ]
 
 { #category : 'UI' }
 MBoardElement >> createCounterDisplay [ 
-	| statsContainer selectionText mineText |
+	| statsContainer selectionText mineText themeSelector |
 	
 	statsContainer := BlElement new.
 	statsContainer 
@@ -227,6 +228,7 @@ MBoardElement >> createCounterDisplay [
 		fontName: 'Source Sans Pro';
 		bold;
 		foreground: (Color r: 0.2 g: 0.4 b: 0.8)).
+	selectionText id: #counterText.
 	
 	"Mine counter text"
 	mineText := BlTextElement new text: (('Mines: ', game mineCount asString) asRopedText 
@@ -235,8 +237,12 @@ MBoardElement >> createCounterDisplay [
 		bold;
 		foreground: Color red darker).
 	
+	"Theme selector"
+	themeSelector := self createThemeSelector.
+	
 	statsContainer addChild: selectionText.
 	statsContainer addChild: mineText.
+	statsContainer addChild: themeSelector.
 	
 	"Thêm vào main container"
 	self addChild: statsContainer.
@@ -259,8 +265,10 @@ MBoardElement >> createGameGrid [
 	
 	"Thêm các box elements vào grid"
 	game grid do: [ :aBox |
-		| boxElement |
+		| boxElement boxSize |
+		boxSize := 50 * game magnifier.
 		boxElement := MBoxElement createWithBox: aBox.
+		boxElement size: boxSize @ boxSize.
 		gameGridContainer addChild: boxElement ].
 	
 	"Lưu id để dễ access sau"
@@ -268,6 +276,48 @@ MBoardElement >> createGameGrid [
 	
 	"Thêm grid container vào main container"
 	self addChild: gameGridContainer.
+]
+
+{ #category : 'UI' }
+MBoardElement >> createThemeSelector [
+	| container classicBtn darkBtn oceanBtn |
+	
+	container := BlElement new.
+	container 
+		layout: (BlLinearLayout horizontal cellSpacing: 5);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ].
+	
+	"Classic theme button"
+	classicBtn := BlElement new
+		size: (30 * game magnifier) @ (20 * game magnifier);
+		background: Color lightGray;
+		border: (BlBorder paint: Color black width: 1);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 3).
+	classicBtn addEventHandlerOn: BlClickEvent do: [ :e | game applyTheme: 'Classic' ].
+	
+	"Dark theme button"
+	darkBtn := BlElement new
+		size: (30 * game magnifier) @ (20 * game magnifier);
+		background: (Color r: 0.2 g: 0.2 b: 0.25);
+		border: (BlBorder paint: Color black width: 1);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 3).
+	darkBtn addEventHandlerOn: BlClickEvent do: [ :e | game applyTheme: 'Dark' ].
+	
+	"Ocean theme button"
+	oceanBtn := BlElement new
+		size: (30 * game magnifier) @ (20 * game magnifier);
+		background: (Color r: 0.4 g: 0.6 b: 0.8);
+		border: (BlBorder paint: Color black width: 1);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 3).
+	oceanBtn addEventHandlerOn: BlClickEvent do: [ :e | game applyTheme: 'Ocean' ].
+	
+	container addChild: classicBtn.
+	container addChild: darkBtn.
+	container addChild: oceanBtn.
+	
+	^ container
 ]
 
 { #category : 'accessing' }
@@ -303,7 +353,8 @@ MBoardElement >> initialize [
 
 	super initialize.
 	self background: (BlBackground paint: Color veryVeryLightGray).
-	self layout: (BlGridLayout horizontal cellSpacing: 10).
+	self layout: (BlLinearLayout vertical cellSpacing: 10).
+	self padding: (BlInsets all: 10).
 	self constraintsDo: [ :aLayoutConstraints |
 		aLayoutConstraints horizontal fitContent.
 		aLayoutConstraints vertical fitContent ]
@@ -314,12 +365,9 @@ MBoardElement >> updateCounterDisplay [
 	| statsContainer counterText |
 	
 	statsContainer := self childWithId: #statsContainer ifNone: [ ^ self ].
-	counterText := statsContainer allChildrenBreadthFirstDetect: 
-		[ :child | (child respondsTo: #id) and: [ child id = #counterText ] ] 
-		ifFound: [ :found | found ] 
-		ifNone: [ ^ self ].
+	counterText := statsContainer childWithId: #counterText ifNone: [ ^ self ].
 	
-	counterText text: (('Selections123: ', game selectionCount asString) asRopedText 
+	counterText text: (('Selections: ', game selectionCount asString) asRopedText 
 		fontSize: (18 * game magnifier);
 		fontName: 'Source Sans Pro';
 		bold;
