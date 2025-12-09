@@ -225,3 +225,31 @@ Furthermore, we could add the fact that the user can enter the dimensions of the
 ## Count the boxes selected and the number of mines left
 Lan
 ### The design before changes
+
+Before, the UI calls the Box without any intermediate class, the MVC architecture did not respected because the View calls directly the Control.
+```
+MBoxElement >> initializeEvents
+.....
+ self box click  " Call directly, bypass Board"
+````
+Violate the Law of Demeter, tight coupling: The UI (MBoxElement) knows a lot about the Model (MBox, MBoard)
+```
+MBoxElement >> click
+	self box isFlagged ifTrue: [ "MBoxElement knows box internal state and its own method (click, flag)"
+		self box board gameEnded ifTrue: [ "<= call too long, too far"
+			self background: Color white darker darker.
+	self writeText ] ].
+............
+```
+### Modifications & Designs
+
+<img width="2364" height="1644" alt="image" src="https://github.com/user-attachments/assets/24c2645b-f329-47dd-9629-298688934ab6" />
+
+
+
+
+
+
+
+
+
