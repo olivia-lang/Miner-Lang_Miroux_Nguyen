@@ -146,6 +146,9 @@ width: width height: height
     ^ self createWithMatrix: (CTNewArray2D 
         width: width height: height tabulate: [ :column :row | MBox safe ])
 ```
+
+(For information, initially I simply wanted to have a **matrixSize: size** method to have the same height and width but I wanted more flexibility in choosing the size.)
+
 I updated/reused the method of Olivia launchWithStrategy: aStrategy to adapt with my new factory method
 
 ```
