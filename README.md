@@ -221,3 +221,7 @@ So if the magnifier are resolved we can add in **launchWithStrategy: aStrategy**
 
 It would be interesting if, after choosing the size of their board, they could also choose the mines algorithm.
 Furthermore, we could add the fact that the user can enter the dimensions of their board themselves.
+
+## Count the boxes selected and the number of mines left
+Lan
+### The design before changes
