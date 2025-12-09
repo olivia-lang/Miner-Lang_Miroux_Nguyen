@@ -204,6 +204,80 @@ MBoardElement class >> withMatrixTest5x5WithMagnifier: aNumber [
 	^ self openWithModel: MBoard matrixTest5x5 withMagnifier: aNumber 
 ]
 
+{ #category : 'as yet unclassified' }
+MBoardElement >> createCounterDisplay [
+	|statsContainer selectionText mineText |
+	
+	"container for stats"
+	statsContainer := BlElement new.
+	statsContainer 
+		layout: (BlLinearLayout horizontal cellSpacing: 20);
+		background: (Color r: 0.95 g: 0.95 b: 0.98);
+		border: (BlBorder paint: Color gray width: 2);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 8);
+		padding: (BlInsets all: 15 * game magnifier);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ];
+		id: #statsContainer.
+		
+	"selection counter text"
+	selectionText := BlTextElement new text: ('Selections: 0' asRopedText 
+		fontSize: (18 * game magnifier);
+		fontName: 'Source Sans Pro';
+		bold;
+		foreground: (Color r: 0.2 g: 0.4 b: 0.8)).
+	selectionText id: #counterText.
+	
+	
+	"mine counter text"
+	mineText := BlTextElement new text: (('Mines: ', game mineCount asString) asRopedText 
+		fontSize: (18 * game magnifier);
+		fontName: 'Source Sans Pro';
+		bold;
+		foreground: Color red darker).
+
+	statsContainer addChild: selectionText.
+	statsContainer addChild: mineText.
+	
+	"add main container"
+	self addChild: statsContainer. 
+	
+	
+	
+	 
+]
+
+{ #category : 'as yet unclassified' }
+MBoardElement >> createGameGrid [
+| gameGridContainer |
+	
+	gameGridContainer := BlElement new.
+	gameGridContainer 
+		layout: (BlGridLayout horizontal cellSpacing: 5);
+		padding: (BlInsets all: 5 * game magnifier);
+		constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent ].
+	
+	"set number columns for grid"
+	gameGridContainer layout columnCount: game width.
+	
+	"add box elements to grid"
+	game grid do: [ :aBox |
+		| boxElement boxSize |
+		boxSize := 50 * game magnifier.
+		boxElement := MBoxElement createWithBox: aBox.
+		boxElement size: boxSize @ boxSize.
+		gameGridContainer addChild: boxElement ].
+	
+	"save id in prder to easier acces after"
+	gameGridContainer id: #gameGrid.
+	
+	"add grid container to main container"
+	self addChild: gameGridContainer. 
+]
+
 { #category : 'accessing' }
 MBoardElement >> game [ 
 	^ game
@@ -213,13 +287,20 @@ MBoardElement >> game [
 MBoardElement >> game: aMBoard [
 	"store the model and adjust the padding according to the zoom
 	 show the UI"
+	
+	" creat 2 container separately: counterContainer and gameGrid"
 	game := aMBoard.
-	self padding: (BlInsets all: 5 * game magnifier).
-	self layout columnCount: game width.
-	game grid do: [ :aBox |
-		| boxElement |
-		boxElement := MBoxElement createWithBox: aBox.
-		self addChild: boxElement ]
+	"1. create counter display above"
+	self createCounterDisplay.
+	"2. create game grid container below"
+	self createGameGrid.
+	"3. subscribe to announcements"
+	game announcer 
+		when: MSelectionCountChangedAnnouncement 
+		send: #updateCounterDisplay 
+		to: self.
+	
+	
 ]
 
 { #category : 'initialization' }
@@ -228,7 +309,27 @@ MBoardElement >> initialize [
 	super initialize.
 	self background: (BlBackground paint: Color veryVeryLightGray).
 	self layout: (BlGridLayout horizontal cellSpacing: 5).
+	self padding: (BlInsets all:10).
 	self constraintsDo: [ :aLayoutConstraints |
 		aLayoutConstraints horizontal fitContent.
 		aLayoutConstraints vertical fitContent ]
+]
+
+{ #category : 'as yet unclassified' }
+MBoardElement >> updateCounterDisplay [
+	|statsContainer counterText|
+	
+"query UI elements by ID"
+statsContainer:= self childWithId: #statsContainer ifNone: [ ^self ].
+counterText := statsContainer childWithId: #counterText ifNone: [ ^self ].
+
+"update text content"
+counterText text: ((
+'Selection: ', game selectionCount asString) asRopedText 
+fontSize: (18* game magnifier);
+fontName: 'Source Sans Pro';
+bold;
+foreground: (Color r:0.2 g:0.4 b:0.8)
+).
+
 ]
