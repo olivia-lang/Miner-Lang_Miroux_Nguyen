@@ -62,6 +62,16 @@ self assert: board selectionCount equals: 3
 ]
 
 { #category : 'as yet unclassified' }
+MSelectionTest >> testIncrementMine [
+	board clickOnBox: (board boxAt: 2 at: 2).
+self assert: board selectionCount equals: 1
+
+
+
+
+]
+
+{ #category : 'as yet unclassified' }
 MSelectionTest >> testInitializeCountIsZero [ 
 	self assert: board selectionCount equals: 0 
 
