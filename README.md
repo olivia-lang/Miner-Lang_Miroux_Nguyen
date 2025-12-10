@@ -171,6 +171,14 @@ launchRegular
 ```
 
 Now when you play in Regular mode you will have a board of 8X8 size.
+
+UML : 
+![uml](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSwepper_UML_BoardSize.png)
+
+
+Board with size  12x12 : 
+
+![Board12x12](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSweeper_Board_12x12.PNG)
 ### Tests
 I started to create a class test "MyBoardSizeTest" 
 
