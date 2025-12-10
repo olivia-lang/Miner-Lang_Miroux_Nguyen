@@ -240,11 +240,20 @@ MBoxElement >> initializeEvents
 .....
  self box click  " Call directly, bypass Board"
 ```
-The code also not has a variable to tracking the click. If the user click and reveal one box, the code only count the clicked box, not the revealed (if have) boxes around.
+The code also not has a variable to tracking the click. 
+If the user click and reveal one box, the code only count the clicked box, not the revealed (if have) boxes around. Because
+```
+MBox >> propagateClick
+	...
+	self board
+			boxesAroundBox: self
+			do: [ :box | box isClicked ifFalse: [ box click ] ] ] "box click directly"
+```
 
 ### Modifications & Designs
 
-<img width="2364" height="1644" alt="image" src="https://github.com/user-attachments/assets/24c2645b-f329-47dd-9629-298688934ab6" />
+<img width="1010" height="624" alt="image" src="https://github.com/user-attachments/assets/d6fa7260-191a-4917-9da9-4ce71ab2426f" />
+
 Here, I implimented the MVC architecture with Observe Design Pattern. 
 
 1. First, I refactor method clickOnBox of class MBoard (controller) to calculate the valid clicks. I only count the box that is not opened and not flagged yet. Then I add methods to increment and accessor.
@@ -350,4 +359,13 @@ testObserveDesignPattern
 	board clickOnBox: (board boxAt: 1 at: 1).
 	self assert: count equals: 1
 
+```
+### Difficulties
+With me, the harddest part is to read the architecture and ensure that the code works following MVC. The VIEW has to call the Controller to take the rule, then the Controller has to call the Model and the Model calls back to Controller. That's complex and I have to make sure that my code works right, my model has to call back to controller.
+```
+MBox >> propagateClick
+...
+do: [ :box | box isClicked ifFalse: [
+					"call through board not directly box click like before"
+					self board clickOnBox: box 
 ```
