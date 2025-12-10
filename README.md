@@ -170,7 +170,7 @@ launchRegular
 	^ self launchWithStrategy: FixedPositionMine new width: 8 height: 8
 ```
 
-Now when you play in Regular mode you will have a board of 8X8 size.
+Now when you play in Regular mode you will have a board of 8X8 size and the strategy applied is FixedPositionMine, however if you play in Very Large mode you will have a board of 20x20 with the strategy RandomMine
 
 UML : 
 ![uml](https://github.com/olivia-lang/Miner-Lang_Miroux_Nguyen/blob/master/doc/MineSweeper/MineSwepper_UML_BoardSize.png)
