@@ -289,8 +289,65 @@ MBoardElement >> game: aMBoard
 	counterText text: ((
 'Selection: ', game selectionCount asString) ...
 ```
+### Tests
+My class test is "MSelectionTest"
+First, I set up a board 3x3, a mine box and a variable count (which used after in the test Observe Design Pattern)
+```
+setUp 
+	super setUp.
+	board := MBoard width: 3 height: 3.
+	"set mines" board replaceBox: (board boxAt: 2 at: 2) by: MBox mine.
+	count := 0
+```
+The first test is to test initialize, is the selectionCount equals 0
+```
+testInitializeCountIsZero 
+	self assert: board selectionCount equals: 0 
+```
+The three tests after is to test if the increment works when we click at a box normal, a box has mine (still count), click at three box and count 3 times
+```
+testIncrement 
+	board clickOnBox: (board boxAt: 1 at: 1).
+self assert: board selectionCount equals: 1
 
+testIncrement2
+	board clickOnBox: (board boxAt: 1 at: 1).
+	board clickOnBox: (board boxAt: 1 at: 2).
+	board clickOnBox: (board boxAt: 2 at: 1).
+self assert: board selectionCount equals: 3
 
+testIncrementMine
+	board clickOnBox: (board boxAt: 2 at: 2).
+self assert: board selectionCount equals: 1
+```
+Then I test that the counter do not count when we click at a box is already clicked, or a flagged box
+```
+testDoesNotCountClickedAndFlaggedBox
+	| box1 box2|
+	box1 := board boxAt: 1 at: 1.
+	board clickOnBox: box1. "click one, count 1"
+	board clickOnBox: box1. "click two, dont count"
+	
+	box2 := board boxAt: 1 at: 2.
+	box2 flag.
+	board clickOnBox: box2. "flagged, dont count"
+	
+	self assert: board selectionCount equals: 1.
+```
+The final test is to test the Annoucement. In order to do that, I made a method increment
+```
+incrementCount 
+	count:= count+1
+```
+If a box is clicked, the annoucement is sent to incrementCount, which triggers count and count = 1
+```
+testObserveDesignPattern
+	board announcer 
+		when: MSelectionCountChangedAnnouncement 
+		send: #incrementCount
+		to: self.
+		
+	board clickOnBox: (board boxAt: 1 at: 1).
+	self assert: count equals: 1
 
-
-
+```
