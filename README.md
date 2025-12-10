@@ -231,23 +231,56 @@ Before, the UI calls the Box without any intermediate class, the MVC architectur
 MBoxElement >> initializeEvents
 .....
  self box click  " Call directly, bypass Board"
-````
-Violate the Law of Demeter, tight coupling: The UI (MBoxElement) knows a lot about the Model (MBox, MBoard)
 ```
-MBoxElement >> click
-	self box isFlagged ifTrue: [ "MBoxElement knows box internal state and its own method (click, flag)"
-		self box board gameEnded ifTrue: [ "<= call too long, too far"
-			self background: Color white darker darker.
-	self writeText ] ].
-............
-```
+The code also not has a variable to tracking the click. If the user click and reveal one box, the code only count the clicked box, not the revealed (if have) boxes around.
+
 ### Modifications & Designs
 
 <img width="2364" height="1644" alt="image" src="https://github.com/user-attachments/assets/24c2645b-f329-47dd-9629-298688934ab6" />
+Here, I implimented the MVC architecture with Observe Design Pattern. 
 
+1. First, I refactor method clickOnBox of class MBoard (controller) to calculate the valid clicks. I only count the box that is not opened and not flagged yet. Then I add methods to increment and accessor.
+```
+MBoard >> clickOnBox: aBox "to calculate the right boxes"
+	....
+	(boxToClick isClicked not and: [boxToClick isFlagged not])
+		ifTrue:  [ self incrementSelectionCount ]. "counting logic"
+	boxToClick click.
 
+		>> incrementSelectionCount "increment with notification"
+	selectionCount:= selectionCount +1.
+	self announcer announce: MSelectionCountChangedAnnouncement new.
+	...
 
+		>> selectionCount "accessor"
+	^ selectionCount ifNil: [ selectionCount := 0 ]
 
+```
+Then, I fixed the MBox (Model) to call through MBoard (Controller) 
+```
+MBox >> propagateClick
+		...
+		self board boxesAroundBox: self
+			do: [ :box | box isClicked ifFalse: [
+				self board clickOnBox: box  ] ] ]
+```
+The final step to completed my MVC architecture is made the MBoxElement (View) calls through MBoard (Controller)
+
+2. Observe Design Pattern
+When **MBoard >> incrementSelectionCount** change, it announces **MSelectionCountChangedAnnouncement**. Then, the subscriber (MBoardElement >> game: aMBoard) send a message update to itself, then trigger the update (updateCounterDisplay).
+```
+MBoardElement >> game: aMBoard
+	...
+	game announcer 
+		when: MSelectionCountChangedAnnouncement 
+		send: #updateCounterDisplay 
+		to: self.
+
+			  >> updateCounterDisplay
+	...
+	counterText text: ((
+'Selection: ', game selectionCount asString) ...
+```
 
 
 
